@@ -1,3 +1,5 @@
+//constructor for defining the format of api response
+
 class ApiResponse {
     constructor(
         statusCode,
@@ -10,3 +12,5 @@ class ApiResponse {
         this.success = statusCode < 400
     }
 }
+
+export {ApiResponse}

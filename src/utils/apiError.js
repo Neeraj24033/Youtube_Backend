@@ -1,3 +1,5 @@
+// constructor for api errors so that the error has a particular format
+
 class ApiError extends Error {
     constructor(
         statusCode,

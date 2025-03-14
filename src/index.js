@@ -1,13 +1,13 @@
-// require('dotenv').config({path: './env'})
+// require('dotenv').config({path: './env'})    // After using this the code will run smootly but there is a better approach.
 import dotenv from 'dotenv';
 import connectDB from './db/index.js'
 
-
 dotenv.config({
-    path: "./env"
+    path: "./env"       //The better approach for dotenv import is this.
 })
 
-connectDB(() => {
+connectDB()
+.then(() => {
     app.on("error", (error) => {
         console.log("ERROR:",error);
         throw error;
@@ -17,15 +17,9 @@ connectDB(() => {
         console.log(`Server listening at localhost:${process.env.PORT}`)
     })
 })
-.then()
 .catch((err) => {
     console.log(`ERROR while connecting MONGODB`, err)
 })
-
-
-
-
-
 
 
 
