@@ -1,6 +1,7 @@
 // require('dotenv').config({path: './env'})    // After using this the code will run smootly but there is a better approach.
 import dotenv from 'dotenv';
 import connectDB from './db/index.js'
+import { app } from './app.js';
 
 dotenv.config({
     path: "./env"       //The better approach for dotenv import is this.
