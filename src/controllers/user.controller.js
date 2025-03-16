@@ -3,7 +3,7 @@ import { ApiError } from "../utils/apiError.utils.js";
 import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.utils.js";
 import { ApiResponse } from "../utils/apiResponse.utils.js";
-import { validateHeaderName } from "http";
+
 
 
 const generateAccessTokenAndRefreshToken = async (userId) =>{
@@ -102,7 +102,7 @@ const loginUser = AsyncHandler(async (req, res) => {
 
     const {username, email, password} = req.body
 
-    if (!username || !email) {
+    if (!username && !email) {
         throw new ApiError(400, "Email or Username is required!")
     }
     
