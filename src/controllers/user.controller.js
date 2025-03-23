@@ -9,8 +9,8 @@ import mongoose from "mongoose";
 const generateAccessTokenAndRefreshToken = async (userId) => {
   try {
     const user = await User.findById(userId);
-    const accessToken = await user.generateAccessToken();
-    const refreshToken = await user.generateRefreshToken();
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
@@ -155,8 +155,8 @@ const logoutUser = AsyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set: {
-        refreshToken: undefined,
+      $unset: {
+        refreshToken: 1,
       },
     },
     {
@@ -208,7 +208,7 @@ const refreshAccessToken = AsyncHandler(async (req, res) => {
       await generateAccessTokenAndRefreshToken(user._id);
 
     return res
-      .status(200)
+      .status(201)
       .cookie("accessToken", accessToken, options)
       .cookie("resfreshToken", newRefreshToken, options)
       .json(
@@ -238,13 +238,13 @@ const changeCurrentPassword = AsyncHandler(async (req, res) => {
   await user.save({ validateBeforeSave: false });
 
   return res
-    .status(200)
-    .json(new ApiResponse(200), "Password changed successfully!");
+    .status(201)
+    .json(new ApiResponse(200, "Password changed successfully!"));
 });
 
 const getCurrentUser = AsyncHandler(async (req, res) => {
   return res
-    .status(200)
+    .status(201)
     .json(new ApiResponse(200, req.user, "Current user fetched successfully!"));
 });
 
