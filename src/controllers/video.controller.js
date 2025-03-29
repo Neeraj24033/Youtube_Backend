@@ -76,13 +76,13 @@ const publishAVideo = AsyncHandler(async (req, res) => {
     if(!description){
         throw new ApiError(400, "Description should not be empty!")
     }
-
-    const videoFileLocalPath = req.files?.videoFile[0]?.path
+    
+    const videoFileLocalPath = req.files?.videoFile[0]?.path;
     if(!videoFileLocalPath){
         throw new ApiError(400, "Video file is required!!")
     }
 
-    const thumbnailFileLocalPath = req.files?.thumbnail[0]?.path
+    const thumbnailFileLocalPath = req.files?.thumbnail[0]?.path;
     if(!thumbnailFileLocalPath){
         throw new ApiError(400, "Thumbnail is required!!")
     }
@@ -90,12 +90,12 @@ const publishAVideo = AsyncHandler(async (req, res) => {
     try {
         const duration = await getVideoDuration(videoFileLocalPath)
     
-        const videoFile = uploadOnCloudinary(videoFileLocalPath)
+        const videoFile = await uploadOnCloudinary(videoFileLocalPath)
         if(!videoFile){
             throw new ApiError(400, "Error while uploading video to cloudinary!")
         }
     
-        const thumbnail = uploadOnCloudinary(thumbnailFileLocalPath)
+        const thumbnail = await uploadOnCloudinary(thumbnailFileLocalPath)
         if(!thumbnail){
             throw new ApiError(400, "Error while uploading thumbnail to cloudinary!")
         }
@@ -106,10 +106,10 @@ const publishAVideo = AsyncHandler(async (req, res) => {
             title,
             description,
             duration,
-            owner: req.user?._id
+            videoOwner: req.user?._id
         })
     
-        if(!uploadedVideo){
+        if(!publishedVideo){
             throw new ApiError(400, "Error while publishing the video!")
         }
     
@@ -128,7 +128,7 @@ const getVideoById = AsyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid Video ID!")
     }
 
-    const video = await Video.findById(videoId).populate("owner", "name email");
+    const video = await Video.findById(videoId).populate("videoOwner", "name email")
 
     if(!video){
         throw new ApiError(404, "Video not found!")
@@ -174,12 +174,12 @@ const updateVideo = AsyncHandler(async (req, res) => {
             }
         )
 
-        if(!updateVideo){
+        if(!updatedVideo){
             throw new ApiError(400, "Error while updating Video!")
         }
 
         return res.status(201)
-        .json(new ApiResponse(200, updateVideo, "Video details updated successfully!"))
+        .json(new ApiResponse(200, updatedVideo, "Video details updated successfully!"))
     }
 })
 
@@ -187,9 +187,8 @@ const deleteVideo = AsyncHandler(async (req, res) => {
     const { videoId } = req.params
     //TODO: delete video
 
-    if(isValidObjectId(videoId)){
-        throw new ApiError(201)
-        .json(new ApiResponse(200, "Invalid VideoId!"))
+    if(!isValidObjectId(videoId)){
+        throw new ApiError(400, "Invalid Video Id!")
     }
 
     const deletedVIdeo = await Video.findByIdAndDelete(videoId)

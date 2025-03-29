@@ -91,12 +91,12 @@ const addComment = AsyncHandler(async (req, res) => {
         owner: req.user?._id
     })
 
-    if(!addComment){
+    if(!addedComment){
         throw new ApiError(400, "Something went wrong while adding comment!")
     }
 
     return res.status(201)
-    .json(new ApiResponse(200, addComment, videoId, "Added comment successfully!"))
+    .json(new ApiResponse(200, addedComment, videoId, "Added comment successfully!"))
 })
 
 const updateComment = AsyncHandler( async(req, res) => {
@@ -130,12 +130,12 @@ const updateComment = AsyncHandler( async(req, res) => {
         }
     )
 
-    if(!updateComment){
+    if(!updatedComment){
         throw new ApiError(400, "Error while updating comment!")
     }
 
     res.status(201)
-    .json(200, updateComment, "Comment updated successfully!")
+    .json(new ApiResponse(200, updatedComment, "Comment updated successfully!"))
 })
 
 const deleteComment = AsyncHandler( async (req, res) => {
