@@ -1,7 +1,7 @@
 {
-  "name": "youtube-clone",
+  "name": "vidflow",
   "version": "1.0.0",
-  "description": "Backend of Youtube.",
+  "description": "Backend of VidFlow",
   "keywords": [
     "JavaScript",
     "Backend"
